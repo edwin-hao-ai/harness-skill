@@ -1,0 +1,6 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.harness-skill-state.json
+harness-interview-response.json
+.DS_Store
