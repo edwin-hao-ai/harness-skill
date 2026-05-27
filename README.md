@@ -1,79 +1,96 @@
 # Harness Skill
 
-一个**跨 Agent**的访谈式 Skill：在对话中通过四阶段访谈梳理项目，然后生成一套可导航、可恢复、
-可被多种 AI Agent（Kiro、Cursor、Codex、Claude Code、OpenClaw、Hermes）消费的 **Harness Engineering**
-文档系统。
+**English** · [中文](README.zh-CN.md)
 
-> 两条路径都默认走 **agent + AI**：由 agent 在对话里提问、由 agent 用自己的判断撰写文档。
-> 仓库里另带一套**确定性脚本**作为 CI/测试与无法维持对话状态时的兜底。
+A **cross-agent**, interview-style Skill: it runs a four-phase project interview in chat,
+then generates a navigable, resumable **Harness Engineering** documentation system that
+multiple AI agents (Kiro, Cursor, Codex, Claude Code, OpenClaw, Hermes) can consume.
 
-## 触发方式
+> Both halves default to **agent + AI**: the agent asks the questions and the agent *writes*
+> the docs using its own judgment. A deterministic script set ships alongside as a fallback
+> for CI/testing and runtimes that can't hold chat state.
 
-- **自动**：说"创建文档系统 / 生成 harness / 项目访谈 / Harness 文档 / AI Agent 配置"等，
-  靠 `description` 语义匹配触发。
-- **手动**：`/harness-skill`。
+## How it triggers
 
-激活后 agent 会：检查 `.harness-skill-state.json` 是否可恢复 → 简介四阶段 → 一次问一个逻辑问题 →
-每阶段结束写状态 → Phase 4 后给总结 → **你确认后**才开始生成文档。
+- **Automatically** — say things like "create a doc system / generate harness / project
+  interview / Harness docs / AI agent config" (matched against the skill `description`).
+- **Manually** — `/harness-skill`.
 
-## 四阶段访谈
+Once active, the agent will: check `.harness-skill-state.json` for a resumable session →
+introduce the four phases → ask **one logical question at a time** → persist state after
+each phase → show a summary after Phase 4 → and only generate files **after you confirm**.
 
-1. **Project Exploration** — 名称、描述、目标、用户、功能
-2. **Agent Personality** — 是否语音产品、语调/风格
-3. **Architecture** — 技术栈、架构模式、部署、集成
-4. **Prototype Specs** — 输出格式、保真度、格式相关选项
+## The four-phase interview
 
-中断随时说"暂停"，状态存到 `.harness-skill-state.json`，下次可恢复。
-详见 [agent-interview-protocol.md](skills/harness-skill/references/agent-interview-protocol.md)。
+1. **Project Exploration** — name, description, goals, users, features
+2. **Agent Personality** — voice-enabled? tone/style (if voice)
+3. **Architecture** — stack, pattern, deployment, integrations
+4. **Prototype Specs** — output format, fidelity, format-specific options
 
-## 生成的文档模型（v1 冻结集）
+Say "pause" anytime; progress is saved to `.harness-skill-state.json` and can be resumed.
+See [agent-interview-protocol.md](skills/harness-skill/references/agent-interview-protocol.md).
 
-| 层 | 文档 | 职责 |
+## Generated document model (frozen v1 set)
+
+| Layer | Document | Responsibility |
 | --- | --- | --- |
-| Index | `harness-map.md` | 中央导航索引 |
-| Platform | `spec.md` | 产品需求：做什么、为谁、怎么算成功 |
-| Platform | `design.md` | Google 风格工程设计文档：**约束实现**，记录决策/约束程度/备选方案 |
-| Platform | `architecture.md` | 落定后的架构速查：栈、组件、数据模型、部署 |
-| Platform | `voice.md` | 仅 `voiceEnabled=true` 时生成 |
-| Domain | `use-cases.md` | 每个核心功能至少一个用例 |
-| Application | `project-structure.md` | 反映架构模式的目录组织 |
-| Interface | `user-guide.md` | 面向目标用户的说明 |
-| Memory | `memory.md` / `decisions.md` | 记忆索引与决策记录 |
-| Entry | `AGENTS.md` / `CLAUDE.md` / `.cursor/rules/harness.mdc` | Agent 入口（managed block，幂等合并） |
+| Index | `harness-map.md` | Central navigation index |
+| Platform | `spec.md` | Product requirements: what / for whom / how success is measured |
+| Platform | `design.md` | Google-style engineering design doc that **constrains implementation** (degree of constraint, alternatives considered, cross-cutting concerns) |
+| Platform | `architecture.md` | Settled architecture reference: stack, components, data model, deployment |
+| Platform | `voice.md` | Generated only when `voiceEnabled = true` |
+| Domain | `use-cases.md` | At least one use case per core feature |
+| Application | `project-structure.md` | Directory layout reflecting the architecture pattern |
+| Interface | `user-guide.md` | Guidance aimed at the target users |
+| Memory | `memory.md` / `decisions.md` | Memory index and decision log |
+| Entry | `AGENTS.md` / `CLAUDE.md` / `.cursor/rules/harness.mdc` | Agent entry points (idempotent managed blocks) |
 
-入口文件用 `<!-- HARNESS:START/END -->` 区块**幂等合并**，绝不整文件覆盖用户内容。
-生成约束与撰写心法见 [agent-generation-protocol.md](skills/harness-skill/references/agent-generation-protocol.md)。
+Entry files are merged via `<!-- HARNESS:START/END -->` blocks — **never** a blind overwrite
+of user content. Generation constraints and the authoring mindset live in
+[agent-generation-protocol.md](skills/harness-skill/references/agent-generation-protocol.md).
 
-## 兜底脚本（CI / 无对话状态时）
+> **`spec.md` vs `design.md` vs `architecture.md`** — keep them distinct: `spec.md` is the
+> product requirement ("what & why"); `design.md` is the engineering design doc whose job is
+> to *constrain* the build (alternatives considered, what's fixed vs. flexible);
+> `architecture.md` is the scannable reference of what was settled.
+
+## Fallback scripts (CI / no chat state)
+
+These are **rule-based** (template substitution) and produce thinner content than the
+agent-led path — use them only for terminal/CI mode or when the runtime can't hold state:
 
 ```bash
-# 终端访谈
+# Terminal interview
 python3 skills/harness-skill/scripts/interview.py [--resume]
 
-# 从访谈响应 JSON 确定性生成
+# Deterministic generation from a saved response JSON
 python3 skills/harness-skill/scripts/generate.py --response harness-interview-response.json --root .
 
-# 校验生成结果（死链 / 空文档 / 占位符残留 / SKILL 规范）
+# Validate a generated tree (dead links / empty docs / unfilled placeholders / SKILL spec)
 python3 skills/harness-skill/scripts/validate.py --output .
 python3 skills/harness-skill/scripts/validate.py --skill skills/harness-skill
 ```
 
-## 示例
+## Examples
 
-- [`simple-project/`](skills/harness-skill/assets/examples/simple-project) — agent 主路径（AI 撰写）
-- [`voice-enabled-app/`](skills/harness-skill/assets/examples/voice-enabled-app) — 兜底脚本（模板替换）
+- [`simple-project/`](skills/harness-skill/assets/examples/simple-project) — agent-authored (AI-written)
+- [`voice-enabled-app/`](skills/harness-skill/assets/examples/voice-enabled-app) — fallback script (template substitution)
 
-## 开发与测试
+## Develop & test
 
 ```bash
-python3 -m pytest        # 单元 + 集成测试
+python3 -m pytest        # unit + integration tests
 ```
 
-跨 runtime 镜像（`.kiro/.cursor/.agents/.claude/.codex`）由脚本同步，**只改 `skills/harness-skill/`，
-然后运行**：
+Runtime mirrors (`.kiro/.cursor/.agents/.claude/.codex`) are kept in sync by a script —
+**only edit `skills/harness-skill/`, then run**:
 
 ```bash
 bash skills/harness-skill/scripts/sync-runtime-skills.sh
 ```
 
-规范与计划：[specs/harness-skill/](specs/harness-skill/)。
+Spec and plan: [specs/harness-skill/](specs/harness-skill/).
+
+## License
+
+[MIT](LICENSE).
