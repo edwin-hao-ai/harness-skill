@@ -1,0 +1,18 @@
+---
+description: Harness Engineering rules
+alwaysApply: true
+---
+
+<!-- HARNESS:START -->
+# Harness Rules · TaskFlow
+
+Read [harness-map.md](../../harness-map.md) for the documentation structure. TaskFlow's core
+bet is a real-time, trustworthy shared board that replaces the daily sync meeting.
+
+- Design doc (constraints, alternatives, decisions): [harness/platform/design.md](../../harness/platform/design.md)
+- Architecture reference (stack, data model, deployment): [harness/platform/architecture.md](../../harness/platform/architecture.md)
+- Decisions log (with rationale): [memory/decisions.md](../../memory/decisions.md)
+
+When you touch task-state or board code, respect the optimistic-locking and real-time
+constraints recorded in the design doc.
+<!-- HARNESS:END -->

@@ -1,0 +1,39 @@
+{
+  "projectExploration": {
+    "projectName": "VoiceCook",
+    "projectDescription": "语音引导的免动手烹饪助手。",
+    "projectGoals": ["让用户做饭时无需触碰屏幕"],
+    "successCriteria": [],
+    "targetUsers": [
+      {
+        "name": "家庭厨师",
+        "description": "在家做饭、双手常被占用的人。",
+        "primaryUseCases": ["跟随语音逐步烹饪"]
+      }
+    ],
+    "coreFeatures": [
+      {"name": "语音步骤播报", "description": "逐步朗读菜谱并响应口令。", "priority": "high"}
+    ]
+  },
+  "agentPersonality": {
+    "voiceEnabled": true,
+    "tone": "friendly",
+    "style": "concise",
+    "formality": 3
+  },
+  "architecture": {
+    "techStack": {
+      "languages": ["Python"],
+      "frameworks": ["FastAPI"],
+      "databases": ["SQLite"]
+    },
+    "architecturePattern": "serverless",
+    "deployment": {"containerization": "none"},
+    "integrations": []
+  },
+  "prototypeSpecs": {
+    "outputFormat": "markdown",
+    "fidelityLevel": "low",
+    "docStyle": "concise"
+  }
+}

@@ -1,0 +1,326 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://harness-skill.local/schemas/interview-response.schema.json",
+  "title": "Harness Interview Response",
+  "type": "object",
+  "required": [
+    "projectExploration",
+    "architecture",
+    "prototypeSpecs"
+  ],
+  "properties": {
+    "projectExploration": {
+      "type": "object",
+      "required": [
+        "projectName",
+        "projectDescription",
+        "projectGoals",
+        "targetUsers",
+        "coreFeatures"
+      ],
+      "properties": {
+        "projectName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projectDescription": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projectGoals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "successCriteria": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "targetUsers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/targetUser"
+          },
+          "minItems": 1
+        },
+        "coreFeatures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/feature"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "agentPersonality": {
+      "type": "object",
+      "required": [
+        "voiceEnabled"
+      ],
+      "properties": {
+        "voiceEnabled": {
+          "type": "boolean"
+        },
+        "tone": {
+          "type": "string",
+          "enum": [
+            "professional",
+            "friendly",
+            "casual",
+            "formal"
+          ]
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "concise",
+            "detailed",
+            "technical",
+            "accessible"
+          ]
+        },
+        "formality": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "voicePatterns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/voicePattern"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "architecture": {
+      "type": "object",
+      "required": [
+        "techStack",
+        "architecturePattern"
+      ],
+      "properties": {
+        "techStack": {
+          "$ref": "#/$defs/techStack"
+        },
+        "architecturePattern": {
+          "type": "string",
+          "enum": [
+            "monolith",
+            "microservices",
+            "serverless",
+            "hybrid"
+          ]
+        },
+        "deployment": {
+          "$ref": "#/$defs/deploymentConfig"
+        },
+        "integrations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/integration"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "prototypeSpecs": {
+      "type": "object",
+      "required": [
+        "outputFormat",
+        "fidelityLevel"
+      ],
+      "properties": {
+        "outputFormat": {
+          "type": "string",
+          "enum": [
+            "html",
+            "markdown",
+            "wirescript"
+          ]
+        },
+        "fidelityLevel": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "componentStructure": {
+          "type": "object"
+        },
+        "cssFramework": {
+          "type": "string"
+        },
+        "docStyle": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "targetUser": {
+      "type": "object",
+      "required": [
+        "name",
+        "description",
+        "primaryUseCases"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "primaryUseCases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "feature": {
+      "type": "object",
+      "required": [
+        "name",
+        "description",
+        "priority"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "techStack": {
+      "type": "object",
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "frameworks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "databases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "deploymentConfig": {
+      "type": "object",
+      "properties": {
+        "cloudProvider": {
+          "type": "string"
+        },
+        "containerization": {
+          "type": "string",
+          "enum": [
+            "docker",
+            "kubernetes",
+            "none"
+          ]
+        },
+        "cicdPlatform": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "integration": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "purpose"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "api",
+            "sdk",
+            "service"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "voicePattern": {
+      "type": "object",
+      "required": [
+        "type",
+        "examples"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "filler",
+            "pause",
+            "emphasis"
+          ]
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

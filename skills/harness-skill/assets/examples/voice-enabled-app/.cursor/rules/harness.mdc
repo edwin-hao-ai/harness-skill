@@ -1,0 +1,14 @@
+---
+description: Harness Engineering rules
+alwaysApply: true
+---
+
+<!-- HARNESS:START -->
+# Harness Rules · VoiceCook
+
+Read [harness-map.md](../../harness-map.md) for the documentation structure.
+
+- Architecture: [harness/platform/architecture.md](../../harness/platform/architecture.md)
+- Project structure: [harness/application/project-structure.md](../../harness/application/project-structure.md)
+- Decisions: [memory/decisions.md](../../memory/decisions.md)
+<!-- HARNESS:END -->

@@ -1,0 +1,17 @@
+<!-- HARNESS:START -->
+# Claude Code Instructions · VoiceCook
+
+This project uses the Harness Engineering system. Start at [harness-map.md](harness-map.md).
+
+## Key files
+
+- Design: [harness/platform/design.md](harness/platform/design.md)
+- Architecture: [harness/platform/architecture.md](harness/platform/architecture.md)
+- Decisions: [memory/decisions.md](memory/decisions.md)
+
+## Workflow
+
+1. Read the relevant `harness/` docs before editing.
+2. Check [memory/decisions.md](memory/decisions.md) for existing decisions; append new ones there.
+3. Keep generated docs in CommonMark with relative links.
+<!-- HARNESS:END -->

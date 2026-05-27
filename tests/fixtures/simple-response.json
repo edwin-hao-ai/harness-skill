@@ -1,0 +1,39 @@
+{
+  "projectExploration": {
+    "projectName": "TaskFlow",
+    "projectDescription": "一个轻量级团队任务协作工具。",
+    "projectGoals": ["让小团队快速对齐任务", "减少状态同步的会议"],
+    "successCriteria": ["周活跃团队数 > 100"],
+    "targetUsers": [
+      {
+        "name": "团队负责人",
+        "description": "负责分配任务并跟踪进度的人。",
+        "primaryUseCases": ["分配任务", "查看整体进度"]
+      }
+    ],
+    "coreFeatures": [
+      {"name": "任务看板", "description": "拖拽式任务状态管理。", "priority": "high"},
+      {"name": "任务评论", "description": "在任务下进行讨论。", "priority": "medium"}
+    ]
+  },
+  "agentPersonality": {"voiceEnabled": false},
+  "architecture": {
+    "techStack": {
+      "languages": ["TypeScript"],
+      "frameworks": ["React", "Express"],
+      "databases": ["PostgreSQL"]
+    },
+    "architecturePattern": "monolith",
+    "deployment": {
+      "cloudProvider": "AWS",
+      "containerization": "docker",
+      "cicdPlatform": "GitHub Actions"
+    },
+    "integrations": [{"name": "Slack", "type": "api", "purpose": "任务通知"}]
+  },
+  "prototypeSpecs": {
+    "outputFormat": "html",
+    "fidelityLevel": "medium",
+    "cssFramework": "tailwind"
+  }
+}
