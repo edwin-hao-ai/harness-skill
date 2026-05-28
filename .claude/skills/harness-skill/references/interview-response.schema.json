@@ -165,6 +165,105 @@
         }
       },
       "additionalProperties": true
+    },
+    "designSystem": {
+      "type": "object",
+      "description": "Visual design system following Google DESIGN.md specification",
+      "properties": {
+        "overview": {
+          "type": "string",
+          "description": "Brand personality, visual feeling, and design philosophy"
+        },
+        "brandPersonality": {
+          "type": "string",
+          "description": "e.g., professional, playful, minimalist, bold"
+        },
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$",
+              "description": "Primary brand color (hex without #)"
+            },
+            "secondary": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$",
+              "description": "Secondary/accent color (hex without #)"
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$",
+              "description": "Page background color (hex without #)"
+            },
+            "surface": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$",
+              "description": "Card/component surface color (hex without #)"
+            },
+            "text": {
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]{6}$",
+              "description": "Primary text color (hex without #)"
+            }
+          }
+        },
+        "typography": {
+          "type": "object",
+          "properties": {
+            "headingFont": {
+              "type": "string",
+              "description": "Font family for headings"
+            },
+            "bodyFont": {
+              "type": "string",
+              "description": "Font family for body text"
+            }
+          }
+        },
+        "layout": {
+          "type": "object",
+          "properties": {
+            "spacingSystem": {
+              "type": "string",
+              "enum": ["8px-grid", "4px-grid", "fluid"],
+              "description": "Spacing scale system"
+            },
+            "responsiveBreakpoints": {
+              "type": "object",
+              "properties": {
+                "mobile": { "type": "string" },
+                "tablet": { "type": "string" },
+                "desktop": { "type": "string" }
+              }
+            }
+          }
+        },
+        "elevation": {
+          "type": "string",
+          "description": "Elevation strategy: shadows, tonal-layers, flat"
+        },
+        "shapes": {
+          "type": "string",
+          "description": "Shape language: sharp, rounded, organic"
+        },
+        "components": {
+          "type": "object",
+          "description": "Component-specific styling guidelines",
+          "additionalProperties": true
+        },
+        "dos": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Design best practices"
+        },
+        "donts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Design anti-patterns to avoid"
+        }
+      },
+      "additionalProperties": true
     }
   },
   "$defs": {

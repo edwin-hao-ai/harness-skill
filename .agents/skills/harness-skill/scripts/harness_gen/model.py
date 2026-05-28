@@ -209,11 +209,100 @@ class PrototypeSpecs:
 
 
 @dataclass(frozen=True)
+class DesignColors:
+    primary: str = "1A1C1E"
+    secondary: str = "6C7278"
+    background: str = "F7F5F2"
+    surface: str = "FFFFFF"
+    text: str = "1A1C1E"
+
+    @staticmethod
+    def from_dict(data: Optional[Dict[str, Any]]) -> "DesignColors":
+        if not data:
+            return DesignColors()
+        def _hex(val: Any, default: str) -> str:
+            s = str(val).lstrip("#") if val else default
+            return s if len(s) == 6 else default
+        return DesignColors(
+            primary=_hex(data.get("primary"), "1A1C1E"),
+            secondary=_hex(data.get("secondary"), "6C7278"),
+            background=_hex(data.get("background"), "F7F5F2"),
+            surface=_hex(data.get("surface"), "FFFFFF"),
+            text=_hex(data.get("text"), "1A1C1E"),
+        )
+
+
+@dataclass(frozen=True)
+class DesignTypography:
+    heading_font: str = "Inter"
+    body_font: str = "Inter"
+
+    @staticmethod
+    def from_dict(data: Optional[Dict[str, Any]]) -> "DesignTypography":
+        if not data:
+            return DesignTypography()
+        return DesignTypography(
+            heading_font=str(data.get("headingFont") or "Inter"),
+            body_font=str(data.get("bodyFont") or "Inter"),
+        )
+
+
+@dataclass(frozen=True)
+class DesignLayout:
+    spacing_system: str = "8px-grid"
+    mobile_breakpoint: str = "375px"
+    tablet_breakpoint: str = "768px"
+    desktop_breakpoint: str = "1280px"
+
+    @staticmethod
+    def from_dict(data: Optional[Dict[str, Any]]) -> "DesignLayout":
+        if not data:
+            return DesignLayout()
+        bp = data.get("responsiveBreakpoints") or {}
+        return DesignLayout(
+            spacing_system=str(data.get("spacingSystem") or "8px-grid"),
+            mobile_breakpoint=str(bp.get("mobile") or "375px"),
+            tablet_breakpoint=str(bp.get("tablet") or "768px"),
+            desktop_breakpoint=str(bp.get("desktop") or "1280px"),
+        )
+
+
+@dataclass(frozen=True)
+class DesignSystem:
+    overview: str = ""
+    brand_personality: str = ""
+    colors: DesignColors = field(default_factory=DesignColors)
+    typography: DesignTypography = field(default_factory=DesignTypography)
+    layout: DesignLayout = field(default_factory=DesignLayout)
+    elevation: str = "tonal-layers"
+    shapes: str = "rounded"
+    dos: Tuple[str, ...] = ()
+    donts: Tuple[str, ...] = ()
+
+    @staticmethod
+    def from_dict(data: Optional[Dict[str, Any]]) -> "DesignSystem":
+        if not data:
+            return DesignSystem()
+        return DesignSystem(
+            overview=str(data.get("overview") or ""),
+            brand_personality=str(data.get("brandPersonality") or ""),
+            colors=DesignColors.from_dict(data.get("colors")),
+            typography=DesignTypography.from_dict(data.get("typography")),
+            layout=DesignLayout.from_dict(data.get("layout")),
+            elevation=str(data.get("elevation") or "tonal-layers"),
+            shapes=str(data.get("shapes") or "rounded"),
+            dos=tuple(str(d) for d in (data.get("dos") or [])),
+            donts=tuple(str(d) for d in (data.get("donts") or [])),
+        )
+
+
+@dataclass(frozen=True)
 class InterviewResponse:
     project: ProjectExploration
     personality: AgentPersonality
     architecture: Architecture
     prototype: PrototypeSpecs
+    design: DesignSystem = field(default_factory=DesignSystem)
 
     @staticmethod
     def from_dict(data: Dict[str, Any]) -> "InterviewResponse":
@@ -230,4 +319,5 @@ class InterviewResponse:
             prototype=PrototypeSpecs.from_dict(
                 _require(data, "prototypeSpecs", "response")
             ),
+            design=DesignSystem.from_dict(data.get("designSystem")),
         )
